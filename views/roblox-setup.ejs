@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <main class="page-shell narrow fade-in">
+    <section class="page-heading center">
+      <p class="eyebrow">Step 2</p>
+      <h1>Connect Your Roblox Username</h1>
+      <p>Make sure your Roblox username is correct. You will only be able to submit once.</p>
+    </section>
+
+    <section class="glass-card form-card">
+      <div class="connected-box" aria-label="Discord connected placeholder">
+        <span class="status-dot"></span>
+        <div>
+          <strong>Discord Account</strong>
+          <p>Connected as <%= user.username %></p>
+        </div>
+      </div>
+
+      <% if (formError) { %>
+        <p class="error-text" role="alert"><%= formError %></p>
+      <% } %>
+
+      <!-- Phase 3: this form now saves the Roblox username in Supabase for the authenticated Discord user. -->
+      <form id="robloxForm" class="stacked-form" action="/roblox-setup" method="POST" novalidate>
+        <label for="robloxUsername">Roblox Username</label>
+        <input
+          id="robloxUsername"
+          name="robloxUsername"
+          type="text"
+          placeholder="Example: RezeFruitPlayer"
+          value="<%= robloxUsername || '' %>"
+          maxlength="20"
+          autocomplete="username"
+          aria-describedby="robloxHelp robloxError"
+        >
+        <p id="robloxHelp" class="helper-text">Do not enter your display name unless it is also your real Roblox username.</p>
+        <p id="robloxError" class="error-text" role="alert"></p>
+
+        <button class="btn btn-primary full-width" type="submit">Continue to Quiz</button>
+      </form>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
