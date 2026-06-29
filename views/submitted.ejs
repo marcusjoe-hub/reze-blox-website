@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <main class="page-shell narrow fade-in">
+    <section class="glass-card submitted-card center <%= submission && submission.status === 'cheated' ? 'cheated-submission-card' : '' %>">
+      <div class="success-lock" aria-hidden="true"><%= submission && submission.status === 'cheated' ? '🚨' : '🔒' %></div>
+
+      <% if (submission && submission.status === 'cheated') { %>
+        <p class="eyebrow danger-eyebrow">Submission Locked</p>
+        <h1>Your Submission Was Locked</h1>
+        <p class="cheated-message">
+          You were caught switching tabs during the quiz. Your submission has been marked as cheated with a score of 0/20.
+        </p>
+        <p class="helper-text">
+          The server team can review this locked submission from the admin panel.
+        </p>
+      <% } else if (submission) { %>
+        <p class="eyebrow">Submission Complete</p>
+        <h1>Your quiz has been submitted</h1>
+        <p>
+          Your quiz has been submitted successfully. Wait for the server team to review your results.
+        </p>
+        <div class="connected-box submitted-details">
+          <span class="status-dot"></span>
+          <div>
+            <strong>Roblox Username Used</strong>
+            <p><%= submission.roblox_username %></p>
+            <strong>Date Submitted</strong>
+            <p><%= formattedSubmittedAt %></p>
+          </div>
+        </div>
+      <% } else { %>
+        <p class="eyebrow">No Submission Yet</p>
+        <h1>You haven't submitted yet</h1>
+        <p>
+          You have not submitted the quiz yet. If the event is active, you can still complete the Roblox setup and quiz.
+        </p>
+        <p class="helper-text">
+          Once you submit, this page will show your locked submission details.
+        </p>
+      <% } %>
+
+      <a class="btn btn-primary" href="/">Back to Home</a>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
