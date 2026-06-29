@@ -1,0 +1,28 @@
+{
+  "name": "reze-blox-yt-quiz-ui",
+  "version": "1.0.0",
+  "description": "Phase 1 UI-first Express + EJS website skeleton for the Reze Blox YT Discord server quiz.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "express",
+    "ejs",
+    "discord",
+    "quiz",
+    "blox-fruits"
+  ],
+  "author": "Reze Blox YT",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "dotenv": "^16.4.7",
+    "express-session": "^1.18.1",
+    "passport": "^0.7.0",
+    "passport-discord": "^0.1.4",
+    "@supabase/supabase-js": "^2.45.4"
+  }
+}
