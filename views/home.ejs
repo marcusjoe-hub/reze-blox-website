@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <main class="login-page fade-in">
+    <section class="login-card glass-card">
+      <div class="login-orb" aria-hidden="true">
+        <span>🔥</span>
+      </div>
+
+      <% if (authError) { %>
+        <div class="notice compact error-notice login-notice" role="alert">
+          Discord login failed or is not configured yet. Please try again or check your .env settings.
+        </div>
+      <% } %>
+
+      <% if (user) { %>
+        <p class="eyebrow">Discord Connected</p>
+        <h1>Welcome back, <span class="text-fire"><%= user.username %></span>!</h1>
+        <p class="login-description">
+          Your Discord account is connected. Continue into the quiz flow when you are ready.
+        </p>
+
+        <div class="login-actions">
+          <a class="btn btn-primary btn-xl" href="/rules">Continue to Quiz</a>
+          <a class="btn btn-secondary btn-xl" href="/auth/logout">Logout</a>
+        </div>
+      <% } else { %>
+        <p class="eyebrow">Premium Quiz Access</p>
+        <h1><span class="text-fire">Reze Blox YT</span></h1>
+        <h2>Discord Server Quiz Application</h2>
+        <p class="login-description">
+          Login with Discord to begin the quiz.
+        </p>
+
+        <a class="btn btn-primary btn-xl login-main-button" href="/auth/discord">Login with Discord</a>
+      <% } %>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
