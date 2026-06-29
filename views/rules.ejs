@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <main class="page-shell narrow fade-in">
+    <section class="glass-card rules-card">
+      <p class="eyebrow danger-eyebrow">Danger Zone</p>
+      <h1>RULES — READ CAREFULLY</h1>
+      <p class="rules-subtitle">
+        Breaking these rules will result in your submission being marked as cheated with a score of 0/20.
+      </p>
+
+      <% if (formError) { %>
+        <p class="error-text rules-error" role="alert"><%= formError %></p>
+      <% } %>
+
+      <ol class="rules-list">
+        <li>DO NOT switch tabs during the quiz. Even accidental tab switching will be detected and your quiz will be auto-submitted with a score of 0/20.</li>
+        <li>DO NOT refresh the page during the quiz.</li>
+        <li>DO NOT use external help, Google, friends, or any cheats.</li>
+        <li>You have ONLY ONE attempt. Submissions are LOCKED FOREVER.</li>
+        <li>Read each question carefully. You CANNOT go back to change answers after moving to the next question.</li>
+        <li>Be honest. We track everything.</li>
+        <li>Once you start the quiz, finish it in one sitting. Do not close the browser.</li>
+      </ol>
+
+      <form class="rules-form" action="/rules" method="POST">
+        <label class="rules-checkbox">
+          <input id="acceptRules" name="acceptRules" type="checkbox">
+          <span>I have read and understood all the rules. I agree to follow them.</span>
+        </label>
+        <button id="rulesContinueBtn" class="btn btn-primary full-width" type="submit" disabled>I Agree, Continue</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const checkbox = document.querySelector('#acceptRules');
+      const button = document.querySelector('#rulesContinueBtn');
+
+      if (!checkbox || !button) return;
+
+      checkbox.addEventListener('change', () => {
+        button.disabled = !checkbox.checked;
+      });
+    });
+  </script>
+  <%- include('partials/footer') %>
+</body>
+</html>
