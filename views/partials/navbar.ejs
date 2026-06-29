@@ -1,0 +1,27 @@
+<!-- views/partials/navbar.ejs -->
+<!-- Minimal navbar. It now shows Discord login/logout state from res.locals.user. -->
+<header class="site-header">
+  <nav class="navbar" aria-label="Main navigation">
+    <a class="brand" href="/" aria-label="Reze Blox YT home">
+      <span class="brand-mark">R</span>
+      <span>Reze Blox YT</span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" data-nav-toggle>
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-links" data-nav-links>
+      <a href="/">Home</a>
+      <% if (user) { %>
+        <a href="/roblox-setup">Roblox Setup</a>
+        <span class="nav-user">Discord: <strong><%= user.username %></strong></span>
+        <a href="/auth/logout">Logout</a>
+      <% } else { %>
+        <a href="/auth/discord">Login</a>
+      <% } %>
+    </div>
+  </nav>
+</header>
