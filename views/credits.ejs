@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="credits-body">
+  <main class="credits-scene" aria-live="polite">
+    <div class="credits-flame" aria-hidden="true"></div>
+
+    <section class="credit-item credit-1">
+      <h1>Reze</h1>
+      <p>Owner of this community</p>
+    </section>
+
+    <section class="credit-item credit-2">
+      <h1>UE_VEGITO</h1>
+      <p>Helped making the questions</p>
+    </section>
+
+    <section class="credit-item credit-3">
+      <h1>wasdii</h1>
+      <p>Helped making the Answer Key</p>
+    </section>
+
+    <section class="credit-item credit-4">
+      <h1>⚓ Dev Captain ⚡</h1>
+      <p>Made this whole website</p>
+    </section>
+
+    <section class="credit-item credit-final">
+      <h1>Thank you for playing the Reze Blox YT Quiz</h1>
+      <p>Redirecting to your locked submission...</p>
+    </section>
+  </main>
+
+  <script>
+    // CSS controls the cinematic timing. This single redirect happens after the final message.
+    window.setTimeout(() => {
+      window.location.href = '/submitted';
+    }, 17500);
+  </script>
+</body>
+</html>
