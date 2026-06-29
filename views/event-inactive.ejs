@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <main class="page-shell narrow fade-in">
+    <section class="glass-card submitted-card center event-inactive-card">
+      <div class="success-lock event-lock" aria-hidden="true">⏳</div>
+      <p class="eyebrow danger-eyebrow">Event Paused</p>
+      <h1>The Quiz Event Is Not Active</h1>
+      <p class="event-inactive-message">
+        <%= typeof errorMessage !== 'undefined' ? errorMessage : "Sorry! The Reze Blox YT quiz event hasn't started yet, or it has been temporarily paused. Please wait for the server team to start the event. You can check back later." %>
+      </p>
+      <a class="btn btn-primary" href="/">Back to Home</a>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
