@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <main class="page-shell fade-in">
+    <section class="page-heading admin-heading">
+      <div>
+        <p class="eyebrow">Admin UI</p>
+        <h1>Quiz Submissions Dashboard</h1>
+        <p>This page is protected for approved Discord admins and now uses real Supabase data.</p>
+      </div>
+      <div class="admin-actions">
+        <a class="btn btn-ghost" href="/admin">Refresh</a>
+        <a id="exportCsvBtn" class="btn btn-primary" href="/admin/export.csv">Export CSV</a>
+      </div>
+    </section>
+
+    <section class="glass-card event-controls-card">
+      <div class="event-controls-top">
+        <div>
+          <p class="eyebrow">Event Controls</p>
+          <h2>Quiz Event Status</h2>
+          <p class="helper-text">Start or stop public access to Roblox setup and quiz submission pages.</p>
+        </div>
+        <% if (eventStatus && eventStatus.is_active) { %>
+          <span class="event-badge event-active">EVENT ACTIVE</span>
+        <% } else { %>
+          <span class="event-badge event-stopped">EVENT STOPPED</span>
+        <% } %>
+      </div>
+
+      <div class="event-controls-row">
+        <form action="/admin/event/start" method="POST">
+          <button class="btn btn-success" type="submit">START EVENT</button>
+        </form>
+        <form action="/admin/event/stop" method="POST">
+          <button class="btn btn-warning" type="submit">STOP EVENT</button>
+        </form>
+        <form action="/admin/submissions/clear" method="POST" data-danger-clear-form>
+          <button class="btn btn-danger" type="submit">CLEAR ALL SUBMISSIONS</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="stats-grid stats-grid-four" aria-label="Submission stats">
+      <article class="glass-card stat-card">
+        <span>Total Submissions</span>
+        <strong><%= stats.totalSubmissions %></strong>
+      </article>
+      <article class="glass-card stat-card">
+        <span>Today’s Submissions</span>
+        <strong><%= stats.todaysSubmissions %></strong>
+      </article>
+      <article class="glass-card stat-card">
+        <span>Unique Discord Users</span>
+        <strong><%= stats.uniqueDiscordUsers %></strong>
+      </article>
+      <article class="glass-card stat-card">
+        <span>Average Score</span>
+        <strong><%= stats.averageScore %>/20</strong>
+      </article>
+    </section>
+
+    <section class="glass-card admin-panel">
+      <div class="panel-toolbar">
+        <label for="adminSearch">Search Discord username</label>
+        <input id="adminSearch" type="search" placeholder="Try: chill_guy_rblx" autocomplete="off">
+      </div>
+
+      <div class="table-wrap">
+        <table class="submissions-table">
+          <thead>
+            <tr>
+              <th>Discord Username</th>
+              <th>Discord ID</th>
+              <th>Roblox Username</th>
+              <th>Score</th>
+              <th>Status</th>
+              <th>Submission Date</th>
+            </tr>
+          </thead>
+          <tbody id="submissionsTableBody">
+            <% submissions.forEach((submission) => { %>
+              <tr
+                data-discord="<%= submission.discord_username.toLowerCase() %>"
+                data-roblox="<%= submission.roblox_username %>"
+                data-date="<%= submission.submitted_at %>"
+                data-status="<%= submission.status || 'completed' %>"
+              >
+                <td data-label="Discord"><%= submission.discord_username %></td>
+                <td data-label="Discord ID"><span class="discord-id"><%= submission.discord_id %></span></td>
+                <td data-label="Roblox"><%= submission.roblox_username %></td>
+                <td data-label="Score"><strong><%= submission.score || 0 %>/<%= submission.total_questions || 20 %></strong></td>
+                <td data-label="Status">
+                  <% if (submission.status === 'cheated') { %>
+                    <span class="status-pill status-cheated">Cheated</span>
+                  <% } else { %>
+                    <span class="status-pill status-completed">Completed</span>
+                  <% } %>
+                </td>
+                <td data-label="Date"><%= formatDate(submission.submitted_at) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <p id="adminEmptyState" class="helper-text <%= submissions.length ? 'hidden' : '' %>">
+        <%= submissions.length ? 'No submissions match your search.' : 'No submissions yet.' %>
+      </p>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
