@@ -63,7 +63,7 @@ const quizQuestions = [
   {
     id: 10,
     text: 'Which fruit is famous for fast travel?',
-    choices: ['Light', 'Love', 'Barrier', 'Falcon'],
+    choices: ['Light', 'Love', 'Rocket', 'Falcon'],
     correctAnswer: 0
   },
   {
@@ -123,7 +123,7 @@ const quizQuestions = [
   {
     id: 20,
     text: 'Which material is NOT used for the Soul Guitar?',
-    choices: ['Bones', 'Ectoplasm', 'Dark Fragment', 'Magma'],
+    choices: ['Bones', 'Ectoplasm', 'Dark Fragment', 'Magma Ore'],
     correctAnswer: 3
   }
 ];
