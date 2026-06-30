@@ -16,6 +16,8 @@ const passport = require('./config/passport');
 const {
   requireAuth,
   requireAdmin,
+  verifyAdminAction,
+  checkAdminReferer,
   requireRulesAccepted,
   requireEventActive,
   blockIfAlreadySubmitted,
@@ -31,9 +33,11 @@ const {
   getAllSubmissions,
   clearAllSubmissions,
   getEventStatus,
-  setEventStatus
+  setEventStatus,
+  resetEventStatus
 } = require('./services/db');
 const quizQuestions = require('./data/quizQuestions');
+const { sendCompletedDm, sendCheatedDm } = require('./services/discordDm');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -324,6 +328,12 @@ app.post('/quiz/submit', requireAuth, requireRulesAccepted, requireEventActive, 
 
     console.log(`Quiz submitted by ${req.user.username} with score ${score}/${quizQuestions.length}`);
 
+    try {
+      await sendCompletedDm(req.user.id, req.user.username, score, quizQuestions.length, dbUser.roblox_username);
+    } catch (dmError) {
+      console.error('Completed quiz DM failed but submission will continue:', dmError);
+    }
+
     // Never send score to frontend. Only admins can view scores.
     return res.json({ success: true, redirectTo: '/credits' });
   } catch (error) {
@@ -355,6 +365,12 @@ app.post('/quiz/cheated', requireAuth, requireRulesAccepted, requireEventActive,
     });
 
     console.log(`Tab-switch cheat detected for ${req.user.username}`);
+
+    try {
+      await sendCheatedDm(req.user.id, req.user.username);
+    } catch (dmError) {
+      console.error('Cheated quiz DM failed but submission will continue:', dmError);
+    }
 
     return res.json({ success: true, redirectTo: '/credits' });
   } catch (error) {
@@ -425,9 +441,9 @@ app.get('/admin', requireAdmin, async (req, res) => {
 
 // POST /admin/event/start
 // Admin-only route to open the event.
-app.post('/admin/event/start', requireAdmin, async (req, res) => {
+app.post('/admin/event/start', requireAdmin, verifyAdminAction, checkAdminReferer, async (req, res) => {
   try {
-    await setEventStatus(true);
+    await setEventStatus('active');
     console.log(`Event started by admin ${req.user.username}`);
     return res.redirect('/admin');
   } catch (error) {
@@ -438,9 +454,9 @@ app.post('/admin/event/start', requireAdmin, async (req, res) => {
 
 // POST /admin/event/stop
 // Admin-only route to close the event.
-app.post('/admin/event/stop', requireAdmin, async (req, res) => {
+app.post('/admin/event/stop', requireAdmin, verifyAdminAction, checkAdminReferer, async (req, res) => {
   try {
-    await setEventStatus(false);
+    await setEventStatus('finished');
     console.log(`Event stopped by admin ${req.user.username}`);
     return res.redirect('/admin');
   } catch (error) {
@@ -449,9 +465,29 @@ app.post('/admin/event/stop', requireAdmin, async (req, res) => {
   }
 });
 
+// POST /admin/event/restart
+// Admin-only route to set the event back to NOT STARTED. Optionally clears submissions.
+app.post('/admin/event/restart', requireAdmin, verifyAdminAction, checkAdminReferer, async (req, res) => {
+  try {
+    await resetEventStatus();
+
+    if (req.body.clearSubmissions === 'true') {
+      await clearAllSubmissions();
+      console.log(`Event restarted to NOT STARTED and submissions cleared by admin ${req.user.username}`);
+    } else {
+      console.log(`Event restarted to NOT STARTED by admin ${req.user.username}`);
+    }
+
+    return res.redirect('/admin');
+  } catch (error) {
+    console.error('POST /admin/event/restart failed:', error);
+    return renderFriendlyError(res, 'Could not restart the event right now. Please try again later.');
+  }
+});
+
 // POST /admin/submissions/clear
 // Admin-only dangerous route to delete every submission.
-app.post('/admin/submissions/clear', requireAdmin, async (req, res) => {
+app.post('/admin/submissions/clear', requireAdmin, verifyAdminAction, checkAdminReferer, async (req, res) => {
   try {
     await clearAllSubmissions();
     console.log(`All submissions cleared by admin ${req.user.username}`);
