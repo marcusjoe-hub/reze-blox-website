@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupRobloxFormValidation();
   setupAdminDashboardTools();
   setupDangerousAdminConfirm();
+  setupRestartEventConfirm();
 });
 
 function setupMobileNav() {
@@ -108,5 +109,32 @@ function setupDangerousAdminConfirm() {
     if (!confirmed) {
       event.preventDefault();
     }
+  });
+}
+
+function setupRestartEventConfirm() {
+  const restartForm = document.querySelector('[data-restart-event-form]');
+
+  if (!restartForm) return;
+
+  restartForm.addEventListener('submit', (event) => {
+    const wantsRestart = confirm('Are you sure you want to restart the event? (Status will be set back to NOT STARTED)');
+
+    if (!wantsRestart) {
+      event.preventDefault();
+      return;
+    }
+
+    const shouldClear = confirm('Do you ALSO want to CLEAR ALL SUBMISSIONS? OK = Yes, Cancel = No (keep submissions)');
+    let hiddenInput = restartForm.querySelector('input[name="clearSubmissions"]');
+
+    if (!hiddenInput) {
+      hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = 'clearSubmissions';
+      restartForm.appendChild(hiddenInput);
+    }
+
+    hiddenInput.value = shouldClear ? 'true' : 'false';
   });
 }
