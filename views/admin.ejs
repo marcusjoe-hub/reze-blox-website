@@ -24,12 +24,14 @@
         <div>
           <p class="eyebrow">Event Controls</p>
           <h2>Quiz Event Status</h2>
-          <p class="helper-text">Start or stop public access to Roblox setup and quiz submission pages.</p>
+          <p class="helper-text">Start, end, or restart public access to Roblox setup and quiz submission pages.</p>
         </div>
-        <% if (eventStatus && eventStatus.is_active) { %>
+        <% if (eventStatus && eventStatus.state === 'active') { %>
           <span class="event-badge event-active">EVENT ACTIVE</span>
+        <% } else if (eventStatus && eventStatus.state === 'finished') { %>
+          <span class="event-badge event-stopped">EVENT ENDED</span>
         <% } else { %>
-          <span class="event-badge event-stopped">EVENT STOPPED</span>
+          <span class="event-badge event-not-started">EVENT NOT STARTED</span>
         <% } %>
       </div>
 
@@ -39,6 +41,9 @@
         </form>
         <form action="/admin/event/stop" method="POST">
           <button class="btn btn-warning" type="submit">STOP EVENT</button>
+        </form>
+        <form action="/admin/event/restart" method="POST" data-restart-event-form>
+          <button class="btn btn-restart" type="submit">RESTART EVENT</button>
         </form>
         <form action="/admin/submissions/clear" method="POST" data-danger-clear-form>
           <button class="btn btn-danger" type="submit">CLEAR ALL SUBMISSIONS</button>
