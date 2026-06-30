@@ -205,14 +205,17 @@ async function getEventStatus() {
 
     const { data, error } = await supabase
       .from('event_status')
-      .select('is_active, updated_at')
+      .select('state, is_active, updated_at')
       .eq('id', 1)
       .single();
 
     if (error) throw error;
 
+    const state = data.state || (data.is_active ? 'active' : 'not_started');
+
     return {
-      is_active: Boolean(data.is_active),
+      state,
+      is_active: state === 'active',
       updated_at: data.updated_at
     };
   } catch (error) {
@@ -221,35 +224,47 @@ async function getEventStatus() {
   }
 }
 
-async function setEventStatus(isActive) {
+async function setEventStatus(state) {
   try {
     ensureSupabase();
+
+    const validStates = ['not_started', 'active', 'finished'];
+
+    if (!validStates.includes(state)) {
+      throw new Error(`Invalid event status state: ${state}`);
+    }
 
     const { data, error } = await supabase
       .from('event_status')
       .upsert(
         {
           id: 1,
-          is_active: Boolean(isActive),
+          state,
+          is_active: state === 'active',
           updated_at: new Date().toISOString()
         },
         {
           onConflict: 'id'
         }
       )
-      .select('is_active, updated_at')
+      .select('state, is_active, updated_at')
       .single();
 
     if (error) throw error;
 
     return {
-      is_active: Boolean(data.is_active),
+      state: data.state,
+      is_active: data.state === 'active',
       updated_at: data.updated_at
     };
   } catch (error) {
     console.error('Database error in setEventStatus:', error);
     throw error;
   }
+}
+
+async function resetEventStatus() {
+  return setEventStatus('not_started');
 }
 
 module.exports = {
@@ -263,5 +278,6 @@ module.exports = {
   getAllSubmissions,
   clearAllSubmissions,
   getEventStatus,
-  setEventStatus
+  setEventStatus,
+  resetEventStatus
 };
