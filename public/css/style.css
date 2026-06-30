@@ -1208,3 +1208,21 @@ input::placeholder {
     width: 100%;
   }
 }
+
+/* Phase 5 three-state event controls */
+.event-not-started {
+  color: #ffe7ac;
+  border: 1px solid rgba(255, 209, 102, 0.45);
+  background: rgba(255, 209, 102, 0.12);
+  box-shadow: 0 0 24px rgba(255, 209, 102, 0.28);
+}
+
+.btn-restart {
+  color: #1f1300;
+  background: linear-gradient(135deg, var(--gold), #f59e0b);
+  box-shadow: 0 0 24px rgba(255, 209, 102, 0.28);
+}
+
+.btn-restart:hover {
+  box-shadow: 0 0 34px rgba(255, 209, 102, 0.46);
+}
